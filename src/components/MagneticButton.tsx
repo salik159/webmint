@@ -1,5 +1,5 @@
-import { useRef, useState, type ReactNode } from 'react'
-import { motion } from 'framer-motion'
+import { useRef, type ReactNode } from 'react'
+import { motion, useMotionValue, useSpring } from 'framer-motion'
 
 type Props = {
   children: ReactNode
@@ -12,7 +12,18 @@ type Props = {
 
 export default function MagneticButton({ children, variant = 'solid', href, onClick, className = '', disabled = false }: Props) {
   const ref = useRef<HTMLAnchorElement | HTMLButtonElement>(null)
-  const [pos, setPos] = useState({ x: 0, y: 0 })
+
+  // Motion values instead of React state: `.set()` pushes the new value
+  // straight into Framer Motion's own RAF-driven update loop and writes the
+  // transform directly to the DOM, without ever going through React's
+  // render cycle. The previous version called setState on every mousemove
+  // pixel, which re-rendered this component (and its Framer Motion tree)
+  // dozens of times per second — multiplied across every CTA button on
+  // every page, since this component is used site-wide.
+  const mx = useMotionValue(0)
+  const my = useMotionValue(0)
+  const sx = useSpring(mx, { stiffness: 180, damping: 16, mass: 0.2 })
+  const sy = useSpring(my, { stiffness: 180, damping: 16, mass: 0.2 })
 
   function handleMove(e: React.MouseEvent) {
     const el = ref.current
@@ -20,11 +31,13 @@ export default function MagneticButton({ children, variant = 'solid', href, onCl
     const rect = el.getBoundingClientRect()
     const x = e.clientX - rect.left - rect.width / 2
     const y = e.clientY - rect.top - rect.height / 2
-    setPos({ x: x * 0.3, y: y * 0.3 })
+    mx.set(x * 0.3)
+    my.set(y * 0.3)
   }
 
   function handleLeave() {
-    setPos({ x: 0, y: 0 })
+    mx.set(0)
+    my.set(0)
   }
 
   const base =
@@ -42,7 +55,8 @@ export default function MagneticButton({ children, variant = 'solid', href, onCl
       onClick={onClick}
       onMouseMove={disabled ? undefined : handleMove}
       onMouseLeave={disabled ? undefined : handleLeave}
-      animate={{ x: pos.x, y: pos.y, scale: disabled ? 0.98 : 1 }}
+      style={{ x: sx, y: sy }}
+      animate={{ scale: disabled ? 0.98 : 1 }}
       transition={{ type: 'spring', stiffness: 180, damping: 16, mass: 0.2 }}
       className={`${base} ${variant === 'solid' ? solid : outline} ${className} ${disabled ? 'opacity-60 cursor-not-allowed' : ''}`}
     >

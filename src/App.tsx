@@ -1,20 +1,26 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { Suspense, lazy, useEffect } from 'react'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import SmoothScroll from './components/SmoothScroll'
 import CustomCursor from './components/CustomCursor'
 import LoadingScreen from './components/LoadingScreen'
 import Home from './pages/Home'
-import About from './pages/About'
-import Services from './pages/Services'
-import Team from './pages/Team'
-import Process from './pages/Process'
-import Portfolio from './pages/Portfolio'
-import Testimonials from './pages/Testimonials'
-import Pricing from './pages/Pricing'
-import FAQ from './pages/FAQ'
-import Contact from './pages/Contact'
+
+// Only the landing page (Home) is bundled eagerly, since it's what every
+// first-time visitor needs immediately. Every other route is code-split so
+// visitors only ever download the JS for the page they're actually on —
+// this was previously all bundled into a single ~574KB chunk regardless of
+// which page was requested.
+const About = lazy(() => import('./pages/About'))
+const Services = lazy(() => import('./pages/Services'))
+const Team = lazy(() => import('./pages/Team'))
+const Process = lazy(() => import('./pages/Process'))
+const Portfolio = lazy(() => import('./pages/Portfolio'))
+const Testimonials = lazy(() => import('./pages/Testimonials'))
+const Pricing = lazy(() => import('./pages/Pricing'))
+const FAQ = lazy(() => import('./pages/FAQ'))
+const Contact = lazy(() => import('./pages/Contact'))
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -36,18 +42,20 @@ export default function App() {
       <Navbar />
       <ScrollToTop />
       <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/team" element={<Team />} />
-          <Route path="/process" element={<Process />} />
-          <Route path="/portfolio" element={<Portfolio />} />
-          <Route path="/testimonials" element={<Testimonials />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/contact" element={<Contact />} />
-        </Routes>
+        <Suspense fallback={null}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/team" element={<Team />} />
+            <Route path="/process" element={<Process />} />
+            <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/testimonials" element={<Testimonials />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/contact" element={<Contact />} />
+          </Routes>
+        </Suspense>
       </main>
       <Footer />
     </div>

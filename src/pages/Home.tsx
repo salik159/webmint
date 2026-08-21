@@ -6,6 +6,7 @@ import ServicesShowcase from '../components/ServicesShowcase'
 import FeaturedProjects from '../components/FeaturedProjects'
 import TestimonialsMarquee from '../components/TestimonialsMarquee'
 import GlobalReachSection from '../components/GlobalReachSection'
+import HeroBackgroundVideo from '../components/HeroBackgroundVideo'
 
 const trust = [
   { value: '100+', label: 'Projects Delivered' },
@@ -44,17 +45,7 @@ export default function Home() {
   return (
     <div>
       <section className="relative flex min-h-screen w-full overflow-hidden">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          className="absolute inset-0 h-full w-full object-cover"
-          style={{ width: '100vw', height: '100vh' }}
-        >
-          <source src="/video6.mp4" type="video/mp4" />
-        </video>
+        <HeroBackgroundVideo />
 
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,8,22,0.45),rgba(5,8,22,0.25),rgba(5,8,22,0.72))]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(124,77,255,0.22),transparent_28%),radial-gradient(circle_at_80%_20%,rgba(79,140,255,0.16),transparent_24%)]" />

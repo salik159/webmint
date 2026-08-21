@@ -236,10 +236,10 @@ export default function Contact() {
                         className={`${inputClass} text-mute`}
                       >
                         <option value="">Prefer not to say</option>
-                        <option>Under $1,500</option>
-                        <option>$1,500 – $5,000</option>
-                        <option>$5,000 – $10,000</option>
-                        <option>$10,000+</option>
+                        <option>Under 3k</option>
+                        <option>1,500 – 6k</option>
+                        <option>6,000 – 10k</option>
+                        <option>10k+</option>
                       </select>
                     </div>
                   </div>

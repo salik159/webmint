@@ -1,19 +1,29 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { motion } from 'framer-motion'
 import Reveal from '../components/Reveal'
 import MagneticButton from '../components/MagneticButton'
-import { projects } from '../components/FeaturedProjects'
+import { projects, type Project } from '../data/projects'
 import { ArrowUpRight } from 'lucide-react'
 
-function PortfolioCard({ project, index }: { project: (typeof projects)[number]; index: number }) {
+function PortfolioCard({ project, index }: { project: Project; index: number }) {
   const cardRef = useRef<HTMLDivElement>(null)
-  const [glow, setGlow] = useState({ x: 50, y: 50, active: false })
+  const glowRef = useRef<HTMLDivElement>(null)
 
+  // Writes the glow position straight to the DOM via a CSS custom property
+  // instead of React state. The previous version called setState on every
+  // mousemove pixel, which re-rendered this whole card (including its
+  // Framer Motion tree) dozens of times per second while hovering — the
+  // same class of bug as the hero video/globe contention, just local to
+  // this page. CustomCursor.tsx already does this the right way; this
+  // brings Portfolio in line with it.
   function onMove(e: React.MouseEvent) {
     const el = cardRef.current
-    if (!el) return
+    const glow = glowRef.current
+    if (!el || !glow) return
     const r = el.getBoundingClientRect()
-    setGlow({ x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100, active: true })
+    const x = ((e.clientX - r.left) / r.width) * 100
+    const y = ((e.clientY - r.top) / r.height) * 100
+    glow.style.background = `radial-gradient(320px circle at ${x}% ${y}%, rgba(0,245,184,0.16), transparent 70%)`
   }
 
   return (
@@ -21,19 +31,15 @@ function PortfolioCard({ project, index }: { project: (typeof projects)[number];
       <motion.div
         ref={cardRef}
         onMouseMove={onMove}
-        onMouseLeave={() => setGlow((g) => ({ ...g, active: false }))}
         whileHover={{ y: -8 }}
         transition={{ type: 'spring', stiffness: 200, damping: 20 }}
         className="group relative rounded-3xl border border-line bg-card overflow-hidden"
       >
-        {/* cursor-follow glow */}
+        {/* cursor-follow glow — visibility is handled entirely by CSS
+            (group-hover), position is written directly to the DOM above */}
         <div
+          ref={glowRef}
           className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
-          style={{
-            background: glow.active
-              ? `radial-gradient(320px circle at ${glow.x}% ${glow.y}%, rgba(0,245,184,0.16), transparent 70%)`
-              : 'transparent',
-          }}
         />
         {/* animated border glow */}
         <div className="glow-border absolute inset-0 rounded-3xl pointer-events-none z-10" />

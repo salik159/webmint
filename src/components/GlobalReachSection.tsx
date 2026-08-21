@@ -1,12 +1,38 @@
-import { Suspense, lazy } from 'react'
+import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import { Radio } from 'lucide-react'
 import Reveal from './Reveal'
 
 const WireframeGlobe = lazy(() => import('./WireframeGlobe'))
 
 export default function GlobalReachSection() {
+  // The globe is a continuously-rendering Three.js Canvas (a useFrame loop
+  // ticking every animation frame). Previously it mounted the instant this
+  // section rendered — i.e. immediately on page load, well below the fold —
+  // so its WebGL render loop was competing with the hero video's decode
+  // and compositing from the very first paint. Gating the mount behind an
+  // IntersectionObserver means that GPU/CPU work doesn't start until the
+  // section is actually about to be seen.
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const [nearView, setNearView] = useState(false)
+
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setNearView(true)
+          io.disconnect()
+        }
+      },
+      { rootMargin: '300px 0px' }
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
   return (
-    <section className="mx-auto max-w-7xl px-6 lg:px-10 py-16">
+    <section ref={sectionRef} className="mx-auto max-w-7xl px-6 lg:px-10 py-16">
       <Reveal className="text-center max-w-xl mx-auto">
         <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-violet">Global Reach</p>
         <h2 className="mt-3 font-display text-3xl font-medium sm:text-4xl">
@@ -27,15 +53,21 @@ export default function GlobalReachSection() {
           />
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_50%,transparent,black_85%)] opacity-70" />
 
-          <Suspense
-            fallback={
-              <div className="absolute inset-0 grid place-items-center">
-                <div className="h-40 w-40 rounded-full bg-mint/10 blur-2xl animate-pulse" />
-              </div>
-            }
-          >
-            <WireframeGlobe />
-          </Suspense>
+          {nearView ? (
+            <Suspense
+              fallback={
+                <div className="absolute inset-0 grid place-items-center">
+                  <div className="h-40 w-40 rounded-full bg-mint/10 blur-2xl animate-pulse" />
+                </div>
+              }
+            >
+              <WireframeGlobe />
+            </Suspense>
+          ) : (
+            <div className="absolute inset-0 grid place-items-center">
+              <div className="h-40 w-40 rounded-full bg-mint/10 blur-2xl animate-pulse" />
+            </div>
+          )}
 
           {/* HUD overlay */}
           <div className="absolute left-5 top-5 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.3em] text-violet sm:left-6 sm:top-6">

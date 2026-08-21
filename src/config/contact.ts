@@ -9,8 +9,9 @@
 //
 // Nothing else in the codebase needs to change — the Contact page reads
 // this single value.
-export const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/REPLACE_WITH_YOUR_DEPLOYMENT_ID/exec'
+export const GOOGLE_APPS_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbywu1AOB3vd2SahwSbM_JdePyIchRgc3AZfS3BYIn8I3P9d1Rd1OKLl0Ys_ID9wH3_WJw/exec";
 
-export const AGENCY_EMAIL = 'hello@webmint.agency'
-export const AGENCY_PHONE_DISPLAY = '+1 (555) 019-2044'
-export const AGENCY_WHATSAPP_NUMBER = '15550192044' // digits only, no + or spaces
+export const AGENCY_EMAIL = 'Webmintdesigner@gmail.com'
+export const AGENCY_PHONE_DISPLAY = '8309471549'
+export const AGENCY_WHATSAPP_NUMBER = '9398650748' // digits only, no + or spaces

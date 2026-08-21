@@ -1,44 +1,6 @@
 import Reveal from '../components/Reveal'
-import { Star } from 'lucide-react'
-
-const testimonials = [
-  {
-    quote: "WebMint rebuilt our site in three weeks and our demo requests doubled the following month.",
-    name: 'Maya Chen',
-    role: 'Founder, Northbeam Capital',
-    industry: 'Finance · New York',
-  },
-  {
-    quote: "Our conversion rate went up 142% after launch. The team understood our brand better than we did.",
-    name: 'Elena Rossi',
-    role: 'Creative Director, Aurelia Studio',
-    industry: 'Fashion · Milan',
-  },
-  {
-    quote: "Load times dropped by half and our bounce rate finally matches what our portfolio deserves.",
-    name: 'James Porter',
-    role: 'Principal, Porter & Co.',
-    industry: 'Architecture · London',
-  },
-  {
-    quote: "Subscription sign-ups jumped 61% within the first month. The new flow just made sense.",
-    name: 'Priya Nair',
-    role: 'Owner, Fernweg Coffee Co.',
-    industry: 'Food & Beverage · Austin',
-  },
-  {
-    quote: "Three practice areas, one cohesive site, and a CMS our own team can actually manage.",
-    name: 'David Halden',
-    role: 'Managing Partner, Halden Legal Group',
-    industry: 'Legal · Chicago',
-  },
-  {
-    quote: "The landing page paid for itself in the first week of running ads to it.",
-    name: 'Sara Kim',
-    role: 'Founder, Solace Wellness',
-    industry: 'Health & Wellness · Seattle',
-  },
-]
+import { BadgeCheck, Star } from 'lucide-react'
+import { testimonials } from '../data/testimonials'
 
 export default function Testimonials() {
   return (
@@ -54,16 +16,51 @@ export default function Testimonials() {
 
       <section className="mx-auto max-w-7xl px-6 lg:px-10 mt-16 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {testimonials.map((t, i) => (
-          <Reveal key={t.name} delay={(i % 3) * 0.08} className="rounded-2xl border border-line bg-card p-8 flex flex-col">
-            <div className="flex gap-1 text-mint">
-              {Array.from({ length: 5 }).map((_, j) => <Star key={j} size={14} fill="currentColor" />)}
+          <Reveal
+            key={t.name}
+            delay={(i % 3) * 0.08}
+            className="rounded-2xl border border-line bg-card p-8 flex flex-col"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex gap-1 text-mint">
+                {Array.from({ length: 5 }).map((_, j) => (
+                  <Star key={j} size={14} fill="currentColor" />
+                ))}
+              </div>
+              {t.verified && (
+                <span className="flex items-center gap-1 text-[10px] font-medium uppercase tracking-wide text-mute">
+                  <BadgeCheck size={13} className="text-mint" />
+                  Verified Client
+                </span>
+              )}
             </div>
+
             <p className="mt-5 text-sm leading-relaxed flex-1">"{t.quote}"</p>
-            <div className="mt-6 pt-6 border-t border-line">
-              <p className="text-sm font-medium">{t.name}</p>
-              <p className="text-xs text-mute mt-0.5">{t.role}</p>
-              <p className="text-xs text-mute-dim mt-0.5">{t.industry}</p>
+
+            <div className="mt-6 flex items-center gap-3 border-t border-line pt-6">
+              <img
+                src={t.avatarUrl}
+                alt=""
+                aria-hidden="true"
+                width={40}
+                height={40}
+                loading="lazy"
+                className="h-10 w-10 shrink-0 rounded-full"
+              />
+              <div className="min-w-0">
+                <p className="text-sm font-medium">{t.name}</p>
+                <p className="text-xs text-mute mt-0.5">
+                  {t.role}, {t.company}
+                </p>
+                <p className="text-xs text-mute-dim mt-0.5">
+                  {t.city} · {t.service}
+                </p>
+              </div>
             </div>
+
+            <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-mute-dim">
+              Project completed {t.date}
+            </p>
           </Reveal>
         ))}
       </section>

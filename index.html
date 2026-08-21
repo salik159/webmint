@@ -9,6 +9,17 @@
     <meta property="og:title" content="WebMint — Websites That Grow Businesses" />
     <meta property="og:description" content="Premium web design, development, and digital marketing for ambitious brands." />
     <meta property="og:type" content="website" />
+    <!-- Hero poster is the Largest Contentful Paint element on the home
+         page; preloading it lets the browser start fetching it before it
+         has even parsed/executed the JS bundle. -->
+    <link
+      rel="preload"
+      as="image"
+      href="/hero-poster.jpg"
+      imagesrcset="/hero-poster-mobile.jpg 1280w, /hero-poster.jpg 1920w"
+      imagesizes="100vw"
+      fetchpriority="high"
+    />
     <link rel="preconnect" href="https://api.fontshare.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

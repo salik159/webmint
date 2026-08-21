@@ -1,21 +1,22 @@
 import { motion } from 'framer-motion'
 import Reveal from '../components/Reveal'
-import { Globe, Terminal, Link2 } from 'lucide-react'
+import { Globe } from 'lucide-react'
+import LinkedInIcon from '../components/icons/LinkedInIcon'
 
 // NOTE: swap the /images/team/*.svg placeholders for real headshots (jpg/png,
 // square, at least 600x600) — no code changes needed elsewhere, just replace
-// the files in public/images/team/. Update the "#" placeholder hrefs below
-// with each member's real Portfolio / GitHub / LinkedIn URLs.
+// the files in public/images/team/.
+// Abdul Kareem's links below are placeholders — swap for his real
+// portfolio/LinkedIn URLs whenever he has them.
 const team = [
   {
     name: 'Salik Kamal',
     role: 'Founder & Lead Web Developer',
-    photo: '/images/team/salik.svg',
+    photo: '/images/team/salik.jpeg',
     body: 'Passionate about building high-performance websites that help businesses grow through exceptional design, modern development, and innovative digital solutions.',
     socials: [
-      { icon: Globe, label: 'Portfolio', href: '#' },
-      { icon: Terminal, label: 'GitHub', href: '#' },
-      { icon: Link2, label: 'LinkedIn', href: '#' },
+      { icon: Globe, label: 'Portfolio', href: 'https://salikkamalportfolio.vercel.app/' },
+      { icon: LinkedInIcon, label: 'LinkedIn', href: 'https://www.linkedin.com/in/salik-kamal-b88301369/' },
     ],
   },
   {
@@ -24,20 +25,18 @@ const team = [
     photo: '/images/team/abdul.svg',
     body: 'Specializes in SEO, Meta Ads, Google Ads, lead generation, branding, and performance marketing to help businesses scale online.',
     socials: [
-      { icon: Globe, label: 'Portfolio', href: '#' },
-      { icon: Terminal, label: 'GitHub', href: '#' },
-      { icon: Link2, label: 'LinkedIn', href: '#' },
+      { icon: Globe, label: 'Portfolio', href: 'https://www.instagram.com/webmint.design/?hl=en' },
+      { icon: LinkedInIcon, label: 'LinkedIn', href: 'https://www.linkedin.com/in/mohammed-abdul-kareem-2449603a1/' },
     ],
   },
   {
-    name: 'Alia',
+    name: 'Farha Deeba',
     role: 'Co-Owner & Client Relations Head',
-    photo: '/images/team/alia.svg',
+    photo: '/images/team/farha.png',
     body: 'Focused on client communication, project coordination, and ensuring every client receives a seamless experience from consultation to project delivery.',
     socials: [
-      { icon: Globe, label: 'Portfolio', href: '#' },
-      { icon: Terminal, label: 'GitHub', href: '#' },
-      { icon: Link2, label: 'LinkedIn', href: '#' },
+      { icon: Globe, label: 'Portfolio', href: 'https://farha-deeba-portfolio.vercel.app/' },
+      { icon: LinkedInIcon, label: 'LinkedIn', href: 'https://www.linkedin.com/in/farha-deeba-ai/' },
     ],
   },
 ]
@@ -81,7 +80,14 @@ export default function Team() {
               <p className="relative mt-4 text-sm text-mute leading-relaxed">"{m.body}"</p>
               <div className="relative mt-6 flex justify-center gap-4 text-mute">
                 {m.socials.map(({ icon: Icon, label, href }) => (
-                  <a key={label} href={href} aria-label={label} className="hover:text-mint transition-colors">
+                  <a
+                    key={label}
+                    href={href}
+                    aria-label={`${m.name} on ${label}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-mint transition-colors"
+                  >
                     <Icon size={17} />
                   </a>
                 ))}

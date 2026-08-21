@@ -17,12 +17,18 @@ export default function SmoothScroll() {
 
     lenis.on('scroll', ScrollTrigger.update)
 
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000)
-    })
+    // Named function (not an inline closure) so it can actually be removed
+    // from gsap's ticker on cleanup. Previously this callback was never
+    // unregistered, so it kept calling `lenis.raf()` on an already-destroyed
+    // Lenis instance if this component ever remounted — a real memory leak
+    // that also meant multiple ticker callbacks could stack up over time,
+    // each doing extra scroll-position work every animation frame.
+    const update = (time: number) => lenis.raf(time * 1000)
+    gsap.ticker.add(update)
     gsap.ticker.lagSmoothing(0)
 
     return () => {
+      gsap.ticker.remove(update)
       lenis.destroy()
     }
   }, [])
